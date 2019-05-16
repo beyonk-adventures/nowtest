@@ -1,0 +1,35 @@
+version: 2
+jobs:
+  deploy-to-qa:
+    docker:
+      - image: circleci/node:10
+
+    working_directory: ~/workspace
+
+    steps:
+      - checkout
+
+      - run:
+          name: Authorize NPM
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+
+      - run:
+          name: Deploy to now
+          environment:
+            CONFIG: ./.circleci/now.qa.json
+          command: |
+            sudo npm install --unsafe-perm -g now
+            now  --forward-npm -A $CONFIG -e NODE_ENV=qa -e SAPPER_TIMESTAMP=$(date +%s%3N) --token=$NOW_TOKEN
+            now -A $CONFIG alias --token=$NOW_TOKEN
+            now alias api.nowtest.beyonk.com --token=$NOW_TOKEN
+            now --token=$NOW_TOKEN remove nowtest --safe -y
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - deploy-to-qa:
+          context: beyonk
+          filters:
+            branches:
+              only: master
