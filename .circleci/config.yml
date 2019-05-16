@@ -10,10 +10,6 @@ jobs:
       - checkout
 
       - run:
-          name: Authorize NPM
-          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-
-      - run:
           name: Deploy to now
           environment:
             CONFIG: ./.circleci/now.qa.json
@@ -29,7 +25,7 @@ workflows:
   build-deploy:
     jobs:
       - deploy-to-qa:
-          context: beyonk
+          context: org-global
           filters:
             branches:
               only: master
