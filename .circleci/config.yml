@@ -17,7 +17,7 @@ jobs:
             sudo npm install --unsafe-perm -g now
             now  --forward-npm -A $CONFIG -e NODE_ENV=qa -e SAPPER_TIMESTAMP=$(date +%s%3N) --token=$NOW_TOKEN
             now -A $CONFIG alias --token=$NOW_TOKEN
-            now alias api.nowtest.beyonk.com --token=$NOW_TOKEN
+            now -A $CONFIG alias api.nowtest.beyonk.com --token=$NOW_TOKEN
             now --token=$NOW_TOKEN remove nowtest --safe -y
 
 workflows:
